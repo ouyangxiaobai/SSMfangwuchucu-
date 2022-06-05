@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.ContractDAO">
+	<resultMap type="contract" id="contractMap">
+		<id property="contractid" column="contractid" />
+		<result property="cno" column="cno" />
+		<result property="usersid" column="usersid" />
+		<result property="houseid" column="houseid" />
+		<result property="addtime" column="addtime" />
+		<result property="thestart" column="thestart" />
+		<result property="theend" column="theend" />
+		<result property="files" column="files" />
+		<result property="status" column="status" />
+		<result property="username" column="username" />
+		<result property="housename" column="housename" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertContract" parameterType="contract">
+		insert into contract(contractid , cno , usersid , houseid , addtime ,
+		thestart , theend , files , status ) values(#{contractid} , #{cno} ,
+		#{usersid} , #{houseid} , #{addtime} , #{thestart} , #{theend} ,
+		#{files} , #{status} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateContract" parameterType="contract">
+		update contract set cno=#{cno} , usersid=#{usersid} , houseid=#{houseid} ,
+		addtime=#{addtime} , thestart=#{thestart} , theend=#{theend} ,
+		files=#{files} , status=#{status} where contractid=#{contractid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteContract" parameterType="String">
+		delete from contract where contractid = #{contractid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllContract" resultMap="contractMap">
+		select a.* , b.username , c.housename from contract a , users b , house c
+		where 1=1 and a.usersid = b.usersid and a.houseid = c.houseid order by
+		contractid desc
+	</select>
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getContractById" parameterType="String" resultMap="contractMap">
+		select a.* , b.username , c.housename from contract a , users b ,
+		house c where 1=1 and a.usersid = b.usersid and a.houseid = c.houseid
+		and contractid=#{contractid} order by contractid desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getContractByCond" parameterType="contract"
+		resultMap="contractMap">
+		select a.* , b.username , c.housename from contract a , users b ,
+		house c where 1=1 and a.usersid = b.usersid and a.houseid = c.houseid
+		<if test="cno != null and '' != cno">
+			and a.cno = #{cno}
+		</if>
+		<if test="usersid != null and '' != usersid">
+			and a.usersid = #{usersid}
+		</if>
+		<if test="houseid != null and '' != houseid">
+			and a.houseid = #{houseid}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+		<if test="thestart != null and '' != thestart">
+			and a.thestart = #{thestart}
+		</if>
+		<if test="theend != null and '' != theend">
+			and a.theend = #{theend}
+		</if>
+		<if test="files != null and '' != files">
+			and a.files = #{files}
+		</if>
+		<if test="status != null and '' != status">
+			and a.status = #{status}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getContractByLike" parameterType="contract"
+		resultMap="contractMap">
+		select a.* , b.username , c.housename from contract a , users b ,
+		house c where 1=1 and a.usersid = b.usersid and a.houseid = c.houseid
+		<if test="cno != null and '' != cno">
+			and a.cno like CONCAT('%', CONCAT(#{cno}, '%'))
+		</if>
+		<if test="usersid != null and '' != usersid">
+			and a.usersid like CONCAT('%', CONCAT(#{usersid}, '%'))
+		</if>
+		<if test="houseid != null and '' != houseid">
+			and a.houseid like CONCAT('%', CONCAT(#{houseid}, '%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="thestart != null and '' != thestart">
+			and a.thestart like CONCAT('%', CONCAT(#{thestart}, '%'))
+		</if>
+		<if test="theend != null and '' != theend">
+			and a.theend like CONCAT('%', CONCAT(#{theend}, '%'))
+		</if>
+		<if test="files != null and '' != files">
+			and a.files like CONCAT('%', CONCAT(#{files}, '%'))
+		</if>
+		<if test="status != null and '' != status">
+			and a.status like CONCAT('%', CONCAT(#{status}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

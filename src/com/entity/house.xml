@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 配置Mabatis映射文件 -->
+<mapper namespace="com.dao.HouseDAO">
+	<resultMap type="house" id="houseMap">
+		<id property="houseid" column="houseid" />
+		<result property="usersid" column="usersid" />
+		<result property="housename" column="housename" />
+		<result property="image" column="image" />
+		<result property="price" column="price" />
+		<result property="cateid" column="cateid" />
+		<result property="mianji" column="mianji" />
+		<result property="louceng" column="louceng" />
+		<result property="chaoxiang" column="chaoxiang" />
+		<result property="addtime" column="addtime" />
+		<result property="hits" column="hits" />
+		<result property="status" column="status" />
+		<result property="contents" column="contents" />
+		<result property="username" column="username" />
+		<result property="catename" column="catename" />
+		<result property="contact" column="contact" />
+	</resultMap>
+	<!-- 插入语句 DAO通过id调用此配置 -->
+	<insert id="insertHouse" parameterType="house">
+		insert into house(houseid
+		, usersid , housename , image , price , cateid ,
+		mianji , louceng ,
+		chaoxiang , addtime , hits , status , contents )
+		values(#{houseid} ,
+		#{usersid} , #{housename} , #{image} , #{price} ,
+		#{cateid} , #{mianji}
+		, #{louceng} , #{chaoxiang} , #{addtime} ,
+		#{hits} , #{status} ,
+		#{contents} )
+	</insert>
+	<!-- 更新语句 DAO通过id调用此配置 -->
+	<update id="updateHouse" parameterType="house">
+		update house set
+		usersid=#{usersid} , housename=#{housename} ,
+		image=#{image} ,
+		price=#{price} , cateid=#{cateid} , mianji=#{mianji}
+		,
+		louceng=#{louceng} , chaoxiang=#{chaoxiang} , addtime=#{addtime} ,
+		hits=#{hits} , status=#{status} , contents=#{contents} where
+		houseid=#{houseid}
+	</update>
+	<!-- 按主键删除 DAO通过id调用此配置 -->
+	<delete id="deleteHouse" parameterType="String">
+		delete from house where
+		houseid = #{houseid}
+	</delete>
+	<!-- 查询全部信息 DAO通过id调用此配置 -->
+	<select id="getAllHouse" resultMap="houseMap">
+		select a.* , b.username ,
+		b.contact ,
+		c.catename from house a , users b , cate c where
+		1=1 and
+		a.usersid =
+		b.usersid and a.cateid = c.cateid order by houseid
+		desc
+	</select>
+
+	<select id="getHotHouse" resultMap="houseMap">
+		select a.* , b.username ,
+		b.contact ,
+		c.catename from house a , users b , cate c where
+		1=1 and
+		a.usersid =
+		b.usersid and a.cateid = c.cateid and a.status = '待租' order
+		by a.hits
+		desc limit 5
+	</select>
+
+	<select id="getFrontHouse" parameterType="String" resultMap="houseMap">
+		select a.* , b.username , b.contact ,
+		c.catename from house a , users b
+		, cate c
+		where
+		1=1 and a.usersid =
+		b.usersid and a.cateid = c.cateid and
+		a.status
+		= '待租' and a.cateid=#{cateid} order by houseid
+		desc limit 5
+	</select>
+
+	<select id="getNewsHouse" resultMap="houseMap">
+		select a.* , b.username ,
+		b.contact ,
+		c.catename from house a , users b , cate c where
+		1=1 and
+		a.usersid =
+		b.usersid and a.cateid = c.cateid and a.status = '待租' order
+		by houseid
+		desc limit 4
+	</select>
+
+	<!-- 按主键查询 DAO通过id调用此配置 -->
+	<select id="getHouseById" parameterType="String" resultMap="houseMap">
+		select a.* , b.username , b.contact , c.catename from house a , users
+		b , cate c
+		where 1=1 and a.usersid = b.usersid and a.cateid = c.cateid
+		and
+		houseid=#{houseid} order by houseid desc
+	</select>
+	<!-- 按条件精确查询 DAO通过id调用此配置 -->
+	<select id="getHouseByCond" parameterType="house" resultMap="houseMap">
+		select a.* , b.username , b.contact , c.catename from house a , users
+		b , cate c
+		where 1=1 and a.usersid = b.usersid and a.cateid = c.cateid
+		<if test="usersid != null and '' != usersid">
+			and a.usersid = #{usersid}
+		</if>
+		<if test="housename != null and '' != housename">
+			and a.housename = #{housename}
+		</if>
+		<if test="image != null and '' != image">
+			and a.image = #{image}
+		</if>
+		<if test="price != null and '' != price">
+			and a.price = #{price}
+		</if>
+		<if test="cateid != null and '' != cateid">
+			and a.cateid = #{cateid}
+		</if>
+		<if test="mianji != null and '' != mianji">
+			and a.mianji = #{mianji}
+		</if>
+		<if test="louceng != null and '' != louceng">
+			and a.louceng = #{louceng}
+		</if>
+		<if test="chaoxiang != null and '' != chaoxiang">
+			and a.chaoxiang = #{chaoxiang}
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime = #{addtime}
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits = #{hits}
+		</if>
+		<if test="status != null and '' != status">
+			and a.status = #{status}
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents = #{contents}
+		</if>
+	</select>
+	<!-- 按条件模糊查询 DAO通过id调用此配置 -->
+	<select id="getHouseByLike" parameterType="house" resultMap="houseMap">
+		select a.* , b.username , b.contact , c.catename from house a , users
+		b , cate c
+		where 1=1 and a.usersid = b.usersid and a.cateid = c.cateid
+		<if test="usersid != null and '' != usersid">
+			and a.usersid like CONCAT('%', CONCAT(#{usersid}, '%'))
+		</if>
+		<if test="housename != null and '' != housename">
+			and a.housename like CONCAT('%', CONCAT(#{housename},
+			'%'))
+		</if>
+		<if test="image != null and '' != image">
+			and a.image like CONCAT('%', CONCAT(#{image}, '%'))
+		</if>
+		<if test="price != null and '' != price">
+			and a.price like CONCAT('%', CONCAT(#{price}, '%'))
+		</if>
+		<if test="cateid != null and '' != cateid">
+			and a.cateid like CONCAT('%', CONCAT(#{cateid}, '%'))
+		</if>
+		<if test="mianji != null and '' != mianji">
+			and a.mianji like CONCAT('%', CONCAT(#{mianji}, '%'))
+		</if>
+		<if test="louceng != null and '' != louceng">
+			and a.louceng like CONCAT('%', CONCAT(#{louceng}, '%'))
+		</if>
+		<if test="chaoxiang != null and '' != chaoxiang">
+			and a.chaoxiang like CONCAT('%', CONCAT(#{chaoxiang},
+			'%'))
+		</if>
+		<if test="addtime != null and '' != addtime">
+			and a.addtime like CONCAT('%', CONCAT(#{addtime}, '%'))
+		</if>
+		<if test="hits != null and '' != hits">
+			and a.hits like CONCAT('%', CONCAT(#{hits}, '%'))
+		</if>
+		<if test="status != null and '' != status">
+			and a.status like CONCAT('%', CONCAT(#{status}, '%'))
+		</if>
+		<if test="contents != null and '' != contents">
+			and a.contents like CONCAT('%', CONCAT(#{contents}, '%'))
+		</if>
+	</select>
+</mapper>
+
+

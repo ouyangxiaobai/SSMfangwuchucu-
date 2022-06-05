@@ -1,0 +1,1 @@
+function check(){if(document.myform.catename.value==''){alert('请输入类型名称'); return false; }if(document.myform.addtime.value==''){alert('请输入创建日期'); return false; }}
